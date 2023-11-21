@@ -1,0 +1,30 @@
+trigger:
+  branches:
+    include:
+      - main
+      - dev
+pool:
+      name: 'TEST-GIT'
+
+
+stages:
+- stage: "QualityTest"
+  jobs:
+  - job: Scanning
+    displayName: SonarQube 
+    timeoutInMinutes: 360
+    cancelTimeoutInMinutes: 5
+    steps:
+     - task: SonarQubePrepare@4
+       inputs:
+        SonarQube: 'Sonarqube'
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: 'Test-git'
+        cliProjectName: 'Test-git'
+        cliSources: '.'
+
+     - task: SonarQubeAnalyze@4
+     - task: SonarQubePublish@4
+       inputs:
+        pollingTimeoutSec: '300'
